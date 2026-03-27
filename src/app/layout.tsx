@@ -17,15 +17,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+      <body className="bg-[#0f172a] min-h-screen antialiased">
         <AuthProvider>
-          <Navbar />
-          <main className="min-h-screen flex flex-col">
-            <div className="flex-1">
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-1">
               {children}
-            </div>
+            </main>
             <Footer />
-          </main>
+          </div>
         </AuthProvider>
       </body>
     </html>
