@@ -13,46 +13,51 @@ export default function Home() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center space-y-4">
-          <Loader className="w-14 h-14 animate-spin mx-auto text-blue-500" />
-          <p className="text-slate-400 text-lg">Carregando...</p>
+          <Loader className="w-10 h-10 animate-spin mx-auto text-blue-500" />
+          <p className="text-slate-500 text-sm">Carregando...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-12">
-      {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 space-y-6 animate-fade-in">
-          <div className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/50">
-            <p className="text-sm font-semibold text-blue-300">🚀 Autenticação Moderna</p>
+    <div className="min-h-screen pt-24 pb-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Hero Section */}
+        <div className="text-center mb-20 space-y-8 animate-fade-in">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+            Autenticação Moderna
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-white leading-tight">
+
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tight">
             Autenticação
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-violet-400 to-purple-400">
               Segura & Rápida
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Autenticação com Google OAuth 2.0 + cadastro de usuários com geração automática de dados em JSON
+
+          <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            OAuth 2.0 com Google + cadastro de usuários com geração automática de dados em JSON
           </p>
 
           {!user && (
-            <div className="pt-4">
+            <div className="pt-2">
               <LoginButton />
             </div>
           )}
         </div>
 
-        {/* Features Grid - Before Auth */}
+        {/* Features Grid - Unauthenticated */}
         {!user && (
-          <div className="grid md:grid-cols-3 gap-6 mb-16 animate-slide-up">
+          <div className="grid sm:grid-cols-3 gap-5 mb-20 animate-slide-up">
             {[
               {
                 icon: Lock,
                 title: 'OAuth 2.0 Seguro',
-                description: 'Autenticação segura com Firebase e Google'
+                description: 'Autenticação segura via Firebase e Google'
               },
               {
                 icon: FileText,
@@ -61,70 +66,64 @@ export default function Home() {
               },
               {
                 icon: Shield,
-                title: 'Protegido',
-                description: 'Criptografia de ponta a ponta'
+                title: 'Criptografia',
+                description: 'Proteção de ponta a ponta em toda comunicação'
               }
             ].map((feature, idx) => (
               <div key={idx} className="card group">
-                <div className="mb-4 p-3 w-fit rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-colors duration-300">
-                  <feature.icon className="w-6 h-6 text-blue-400" />
+                <div className="mb-4 p-2.5 w-fit rounded-lg bg-blue-500/10 group-hover:bg-blue-500/15 transition-colors duration-200">
+                  <feature.icon className="w-5 h-5 text-blue-400" />
                 </div>
-                <h3 className="font-bold text-lg text-white mb-2">{feature.title}</h3>
-                <p className="text-slate-400 text-sm">{feature.description}</p>
+                <h3 className="font-semibold text-white mb-1.5">{feature.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
         )}
 
-        {/* Main Content - After Auth */}
+        {/* Authenticated Content */}
         {user && (
-          <div className="space-y-12">
+          <div className="space-y-8 mb-20">
             {/* Welcome Card */}
             <div className="card-glass animate-fade-in">
-              <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                  <div className="space-y-2">
-                    <p className="text-sm font-semibold text-blue-400 uppercase tracking-wider">Bem-vindo de volta</p>
-                    <h2 className="text-3xl md:text-4xl font-bold text-white">
-                      {user.name}
-                    </h2>
-                  </div>
-                  <div className="px-4 py-2 rounded-full bg-green-500/20 border border-green-500/50">
-                    <span className="text-sm font-semibold text-green-300">✓ Autenticado</span>
-                  </div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <div>
+                  <p className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-1">Bem-vindo de volta</p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-white">{user.name}</h2>
                 </div>
-
-                <UserProfile />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/25 text-green-300 text-xs font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                  Autenticado
+                </span>
               </div>
+              <UserProfile />
             </div>
 
             {/* Action Cards */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Apresentação Card */}
+            <div className="grid sm:grid-cols-2 gap-5">
               <Link href="/apresentacao" className="group card overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-transparent rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-300" />
-                <div className="relative space-y-4">
-                  <div className="p-3 w-fit rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
-                    <Users className="w-6 h-6 text-blue-400" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-[inherit]" />
+                <div className="relative space-y-3">
+                  <div className="p-2.5 w-fit rounded-lg bg-blue-500/10">
+                    <Users className="w-5 h-5 text-blue-400" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">Apresentação da Dupla</h3>
-                  <p className="text-slate-400 text-sm mb-4">Conheça as informações e habilidades dos membros da equipe</p>
-                  <div className="inline-flex items-center gap-2 text-blue-400 font-semibold text-sm group-hover:gap-3 transition-all">
+                  <h3 className="text-lg font-semibold text-white">Apresentação da Dupla</h3>
+                  <p className="text-slate-500 text-sm">Conheça as habilidades e informações dos membros da equipe</p>
+                  <div className="inline-flex items-center gap-1.5 text-blue-400 text-sm font-medium group-hover:gap-2.5 transition-all duration-200">
                     Ver mais <span>→</span>
                   </div>
                 </div>
               </Link>
 
-              {/* Cadastro Card */}
               <Link href="/cadastro" className="group card overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-300" />
-                <div className="relative space-y-4">
-                  <div className="p-3 w-fit rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20">
-                    <FileText className="w-6 h-6 text-purple-400" />
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-[inherit]" />
+                <div className="relative space-y-3">
+                  <div className="p-2.5 w-fit rounded-lg bg-violet-500/10">
+                    <FileText className="w-5 h-5 text-violet-400" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">Cadastro de Usuário</h3>
-                  <p className="text-slate-400 text-sm mb-4">Preencha o formulário e gere seu arquivo JSON automaticamente</p>
-                  <div className="inline-flex items-center gap-2 text-purple-400 font-semibold text-sm group-hover:gap-3 transition-all">
+                  <h3 className="text-lg font-semibold text-white">Cadastro de Usuário</h3>
+                  <p className="text-slate-500 text-sm">Preencha o formulário e gere seu arquivo JSON automaticamente</p>
+                  <div className="inline-flex items-center gap-1.5 text-violet-400 text-sm font-medium group-hover:gap-2.5 transition-all duration-200">
                     Acessar <span>→</span>
                   </div>
                 </div>
@@ -133,84 +132,66 @@ export default function Home() {
           </div>
         )}
 
-        {/* How it Works Section */}
-        <div className="mt-20 pt-20 border-t border-slate-700/50">
-          <div className="text-center mb-12 space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">Como Funciona?</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Um processo simples em três passos para autenticação e cadastro
+        {/* How it Works */}
+        <div className="pt-16 border-t border-white/[0.06] mb-16">
+          <div className="text-center mb-12 space-y-3">
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Como Funciona?</h2>
+            <p className="text-slate-500 max-w-xl mx-auto text-sm">
+              Três passos simples para autenticação e cadastro
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-3 gap-6 relative">
+            {/* Connector lines */}
+            <div aria-hidden="true" className="hidden sm:block absolute top-10 left-[calc(33%+1rem)] right-[calc(33%+1rem)] h-px bg-gradient-to-r from-blue-500/40 via-violet-500/40 to-transparent" />
+
             {[
-              {
-                step: 1,
-                title: 'Login Seguro',
-                description: 'Autentique com sua conta Google usando OAuth 2.0',
-                icon: Lock
-              },
-              {
-                step: 2,
-                title: 'Visualize Perfil',
-                description: 'Acesse seus dados e informações da dupla',
-                icon: Users
-              },
-              {
-                step: 3,
-                title: 'Exporte Dados',
-                description: 'Gere e baixe seu arquivo JSON formatado',
-                icon: FileText
-              }
+              { step: 1, title: 'Login Seguro', description: 'Autentique com sua conta Google usando OAuth 2.0', icon: Lock },
+              { step: 2, title: 'Visualize Perfil', description: 'Acesse seus dados e informações da dupla', icon: Users },
+              { step: 3, title: 'Exporte Dados', description: 'Gere e baixe seu arquivo JSON formatado', icon: FileText }
             ].map((item, idx) => {
               const Icon = item.icon;
               return (
-                <div key={idx} className="relative">
-                  {/* Connector */}
-                  {idx < 2 && (
-                    <div className="hidden md:block absolute left-full top-12 w-full h-0.5 bg-gradient-to-r from-blue-500 to-transparent" />
-                  )}
-
-                  <div className="card text-center relative z-10">
-                    <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
-                      <span className="font-bold text-white text-lg">{item.step}</span>
-                    </div>
-                    <Icon className="w-8 h-8 mx-auto mb-4 text-blue-400" />
-                    <h3 className="font-bold text-lg text-white mb-2">{item.title}</h3>
-                    <p className="text-slate-400 text-sm">{item.description}</p>
+                <div key={idx} className="card text-center relative z-10">
+                  <div className="flex items-center justify-center w-10 h-10 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 text-white font-bold text-sm shadow-lg shadow-blue-500/20">
+                    {item.step}
                   </div>
+                  <Icon className="w-6 h-6 mx-auto mb-3 text-slate-400" />
+                  <h3 className="font-semibold text-white mb-1.5">{item.title}</h3>
+                  <p className="text-slate-500 text-sm">{item.description}</p>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Features Highlight */}
-        <div className="mt-20 grid md:grid-cols-2 gap-8">
+        {/* Feature Highlights */}
+        <div className="grid sm:grid-cols-2 gap-5">
           <div className="card">
             <div className="flex items-start gap-4">
-              <div className="p-3 rounded-lg bg-green-500/20">
-                <CheckCircle className="w-6 h-6 text-green-400" />
+              <div className="p-2.5 rounded-lg bg-green-500/10 flex-shrink-0">
+                <CheckCircle className="w-5 h-5 text-green-400" />
               </div>
               <div>
-                <h3 className="font-bold text-white mb-2">Dados Pré-preenchidos</h3>
-                <p className="text-slate-400 text-sm">Suas informações do Google são carregadas automaticamente no formulário</p>
+                <h3 className="font-semibold text-white mb-1">Dados Pré-preenchidos</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">Suas informações do Google são carregadas automaticamente no formulário</p>
               </div>
             </div>
           </div>
 
           <div className="card">
             <div className="flex items-start gap-4">
-              <div className="p-3 rounded-lg bg-cyan-500/20">
-                <Zap className="w-6 h-6 text-cyan-400" />
+              <div className="p-2.5 rounded-lg bg-cyan-500/10 flex-shrink-0">
+                <Zap className="w-5 h-5 text-cyan-400" />
               </div>
               <div>
-                <h3 className="font-bold text-white mb-2">Geração Instantânea</h3>
-                <p className="text-slate-400 text-sm">JSON é gerado e disponível para cópia ou download em segundos</p>
+                <h3 className="font-semibold text-white mb-1">Geração Instantânea</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">JSON gerado e disponível para cópia ou download em segundos</p>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
