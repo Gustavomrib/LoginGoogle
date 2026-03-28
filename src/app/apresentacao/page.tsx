@@ -1,5 +1,8 @@
 'use client';
 
+// Disable static generation for this page to avoid Firebase initialization during build
+export const dynamic = 'force-dynamic';
+
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';

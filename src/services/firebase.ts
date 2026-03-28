@@ -1,5 +1,7 @@
 // src/services/firebase.ts
-import { initializeApp } from 'firebase/app';
+'use client';
+
+import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getAnalytics } from 'firebase/analytics';
 
@@ -14,21 +16,41 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Validate that required env vars exist
+const isValidConfig = !!(
+  firebaseConfig.apiKey &&
+  firebaseConfig.authDomain &&
+  firebaseConfig.projectId &&
+  firebaseConfig.appId
+);
 
-// Initialize Firebase Authentication
-export const auth = getAuth(app);
+if (!isValidConfig && typeof window !== 'undefined') {
+  console.warn('Firebase configuration is incomplete. Check your environment variables.');
+}
 
-// Initialize Firebase Analytics (only on client side)
+// Initialize Firebase only once and only on client side
+let app;
+let auth;
 let analytics;
-if (typeof window !== 'undefined') {
+
+if (typeof window !== 'undefined' && isValidConfig) {
   try {
-    analytics = getAnalytics(app);
+    // Get existing app or create new one
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+    
+    // Initialize Firebase Authentication
+    auth = getAuth(app);
+    
+    // Initialize Firebase Analytics
+    try {
+      analytics = getAnalytics(app);
+    } catch (error) {
+      console.log('Analytics not available:', error);
+    }
   } catch (error) {
-    console.log('Analytics not available:', error);
+    console.error('Firebase initialization error:', error);
   }
 }
 
-export { analytics };
+export { app, auth, analytics };
 export default app;
