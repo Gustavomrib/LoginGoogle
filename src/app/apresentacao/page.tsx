@@ -3,19 +3,22 @@
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import Image from 'next/image';
 import { Loader, Code2, Zap, Target, Users as UsersIcon, CheckCircle, Globe, Database } from 'lucide-react';
 
 const TEAM_MEMBERS = [
   {
-    name: 'Seu Nome Aqui',
+    name: 'Gustavo Marques Lopes Ribeiro',
     role: 'Desenvolvedor Full-Stack',
+    photo: '/gustavo.jpg',  // Coloque a foto em public/gustavo.jpg
     description: 'Apaixonado por tecnologia e desenvolvimento de aplicações web modernas.',
     habilidades: ['React', 'Next.js', 'TypeScript', 'Node.js', 'Firebase'],
     interesses: 'Web Development, Cloud Computing, UI/UX Design',
   },
   {
-    name: 'Marco antonio',
+    name: 'Marco Antonio Brito Prado',
     role: 'Desenvolvedor Full-Stack',
+    photo: '/marco.jpg',  // Coloque a foto em public/marco.jpg
     description: 'Especialista em soluções escaláveis e arquitetura de software.',
     habilidades: ['React', 'TypeScript', 'Database Design', 'DevOps', 'Testing'],
     interesses: 'Backend Development, System Design, API Development',
@@ -77,9 +80,19 @@ export default function Apresentacao() {
               <div className="relative z-10 space-y-5">
                 {/* Avatar + Name */}
                 <div className="flex items-center gap-4 pt-2">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-xl flex-shrink-0 shadow-lg shadow-blue-500/20">
-                    👤
-                  </div>
+                  {member.photo ? (
+                    <Image
+                      src={member.photo}
+                      alt={member.name}
+                      width={56}
+                      height={56}
+                      className="w-14 h-14 rounded-xl object-cover flex-shrink-0 shadow-lg shadow-blue-500/20 ring-2 ring-blue-500/30"
+                    />
+                  ) : (
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-xl flex-shrink-0 shadow-lg shadow-blue-500/20">
+                      {member.name.charAt(0)}
+                    </div>
+                  )}
                   <div>
                     <h2 className="text-xl font-bold text-white">{member.name}</h2>
                     <p className="text-blue-400 text-sm font-medium">{member.role}</p>

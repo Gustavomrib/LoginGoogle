@@ -16,6 +16,7 @@ export function Navbar() {
     ...(user ? [
       { name: 'Apresentação', href: '/apresentacao' },
       { name: 'Cadastro', href: '/cadastro' },
+      { name: 'Usuários', href: '/usuarios' },
     ] : []),
   ];
 

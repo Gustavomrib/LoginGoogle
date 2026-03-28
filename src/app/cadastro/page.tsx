@@ -1,9 +1,12 @@
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
+import { useUsers } from '@/hooks/useUsers';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Loader, Copy, Download, Check, FileJson, Shield, Zap } from 'lucide-react';
+import { AccountSwitcher } from '@/components/AccountSwitcher';
+import { Loader, Copy, Download, Check, FileJson, Shield, Zap, Users, Plus } from 'lucide-react';
+import Link from 'next/link';
 
 interface FormData {
   nome: string;
@@ -15,7 +18,8 @@ interface FormData {
 }
 
 export default function Cadastro() {
-  const { user, loading, updateUserData } = useAuth();
+  const { user, loading, activeAccountUid } = useAuth();
+  const { add, count } = useUsers(activeAccountUid ?? undefined);
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     nome: '',
@@ -60,7 +64,18 @@ export default function Cadastro() {
     setSubmitMessage('');
 
     try {
+      // Adicionar ao storage (múltiplos cadastros)
+      const newUser = add({
+        nome: formData.nome,
+        email: formData.email,
+        telefone: formData.telefone || 'Não informado',
+        cidade: formData.cidade || 'Não informado',
+        profissao: formData.profissao || 'Não informado',
+        bio: formData.bio || 'Não informado',
+      });
+
       const userData = {
+        id: newUser?.id,
         timestamp: new Date().toISOString(),
         usuario: {
           nome: formData.nome,
@@ -87,15 +102,21 @@ export default function Cadastro() {
 
       console.log('📊 Dados do Cadastro:', userData);
 
-      updateUserData({
-        telefone: formData.telefone,
-      });
+      setSubmitMessage('✅ Cadastro realizado com sucesso! Os dados foram salvos.');
 
-      setSubmitMessage('✅ Cadastro realizado com sucesso!');
+      // Limpar formulário para novo cadastro
+      setFormData({
+        nome: '',
+        email: '',
+        telefone: '',
+        cidade: '',
+        profissao: '',
+        bio: '',
+      });
 
       setTimeout(() => {
         setSubmitMessage('');
-      }, 3000);
+      }, 4000);
     } catch (error) {
       console.error('Erro ao processar cadastro:', error);
       setSubmitMessage('❌ Erro ao processar cadastro');
@@ -115,16 +136,15 @@ export default function Cadastro() {
   };
 
   const handleDownloadJSON = () => {
-    const element = document.createElement('a');
-    element.setAttribute?.(
-      'href',
-      `data:text/json;charset=utf-8,${encodeURIComponent(jsonData)}`
-    );
-    element.setAttribute('download', `cadastro-${new Date().getTime()}.json`);
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cadastro-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   if (loading) {
@@ -149,14 +169,30 @@ export default function Cadastro() {
             Formulário de Cadastro
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-[1.1] tracking-tight">
-            Complete Seu
+            Cadastrar Novo
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400">
-              Perfil de Usuário
+              Usuário
             </span>
           </h1>
           <p className="text-slate-400 max-w-xl mx-auto text-base">
-            Preencha os dados e receba um arquivo JSON formatado automaticamente
+            Cadastre múltiplos usuários. Cada envio adiciona um novo registro ao sistema.
           </p>
+
+          {/* Stats */}
+          <div className="inline-flex items-center gap-3 mt-2">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20">
+              <Users className="w-4 h-4 text-violet-400" />
+              <span className="text-sm font-semibold text-violet-300">
+                {count} cadastrado{count !== 1 ? 's' : ''}
+              </span>
+            </div>
+            <Link
+              href="/usuarios"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-400 hover:text-white hover:border-blue-500/30 transition-all duration-200 text-sm font-medium"
+            >
+              Ver todos →
+            </Link>
+          </div>
         </div>
 
         {/* Main Content */}
@@ -177,7 +213,7 @@ export default function Cadastro() {
                     onChange={handleInputChange}
                     required
                     className="input-field"
-                    placeholder="Seu nome"
+                    placeholder="Nome do usuário"
                   />
                 </div>
 
@@ -193,7 +229,7 @@ export default function Cadastro() {
                     onChange={handleInputChange}
                     required
                     className="input-field"
-                    placeholder="seu.email@gmail.com"
+                    placeholder="email@exemplo.com"
                   />
                 </div>
 
@@ -212,7 +248,7 @@ export default function Cadastro() {
                   />
                 </div>
 
-                {/* Cidade */}
+                {/* Cidade / Profissão */}
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-3">
                     <label className="block text-sm font-semibold text-slate-300">
@@ -227,8 +263,6 @@ export default function Cadastro() {
                       placeholder="São Paulo"
                     />
                   </div>
-
-                  {/* Profissão */}
                   <div className="space-y-3">
                     <label className="block text-sm font-semibold text-slate-300">
                       Profissão (Opcional)
@@ -255,7 +289,7 @@ export default function Cadastro() {
                     onChange={handleInputChange}
                     rows={4}
                     className="input-field resize-none"
-                    placeholder="Conte-nos um pouco sobre você..."
+                    placeholder="Conte-nos um pouco sobre este usuário..."
                   />
                 </div>
 
@@ -286,8 +320,8 @@ export default function Cadastro() {
                     </>
                   ) : (
                     <>
-                      <FileJson className="w-5 h-5" />
-                      <span>Gerar Cadastro</span>
+                      <Plus className="w-5 h-5" />
+                      <span>Cadastrar Usuário</span>
                     </>
                   )}
                 </button>
@@ -295,8 +329,11 @@ export default function Cadastro() {
             </div>
           </div>
 
-          {/* Sidebar Info */}
+          {/* Sidebar */}
           <div className="space-y-6 animate-slide-down">
+            {/* Account Switcher */}
+            <AccountSwitcher />
+
             {/* Info Card */}
             <div className="card space-y-4">
               <div className="flex items-center gap-3">
@@ -308,19 +345,19 @@ export default function Cadastro() {
               <ul className="space-y-3 text-sm text-slate-400">
                 <li className="flex items-start gap-2">
                   <span className="text-blue-400 font-bold mt-1">•</span>
-                  <span>Dados do Google aparecem automaticamente</span>
+                  <span>Cadastre múltiplos usuários sem sobrescrever</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-blue-400 font-bold mt-1">•</span>
-                  <span>Campos opcionais podem ser deixados em branco</span>
+                  <span>Dados persistem mesmo após recarregar a página</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-blue-400 font-bold mt-1">•</span>
-                  <span>JSON será gerado ao submeter</span>
+                  <span>Use até 2 contas Google diferentes</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-blue-400 font-bold mt-1">•</span>
-                  <span>Você pode copiar ou baixar o JSON</span>
+                  <span>Veja todos os cadastros na página de Usuários</span>
                 </li>
               </ul>
             </div>
@@ -334,7 +371,7 @@ export default function Cadastro() {
                 <h3 className="font-bold text-white text-lg">Segurança</h3>
               </div>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Seus dados não são armazenados em servidores. O JSON é processado localmente no seu navegador.
+                Os dados são vinculados à sua conta Google e armazenados localmente. Cada conta tem seus próprios registros isolados.
               </p>
             </div>
           </div>
@@ -348,7 +385,7 @@ export default function Cadastro() {
                 <div className="p-2 rounded-lg bg-green-500/20">
                   <FileJson className="w-6 h-6 text-green-400" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white">Seu JSON Gerado</h2>
+                <h2 className="text-2xl md:text-3xl font-bold text-white">Último JSON Gerado</h2>
               </div>
             </div>
 
@@ -386,10 +423,9 @@ export default function Cadastro() {
               </pre>
             </div>
 
-            {/* Console Tip */}
             <div className="p-4 rounded-lg bg-slate-400/5 border border-slate-700">
               <p className="text-sm text-slate-400">
-                💡 <strong className="text-slate-300">Dica:</strong> Abra o console do navegador (F12) para ver os dados formatados também.
+                💡 <strong className="text-slate-300">Dica:</strong> O formulário foi limpo para novo cadastro. Acesse a <Link href="/usuarios" className="text-blue-400 hover:text-blue-300 underline">página de usuários</Link> para ver todos os registros.
               </p>
             </div>
           </div>

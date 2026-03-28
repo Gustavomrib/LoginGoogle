@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { LoginButton } from '@/components/LoginButton';
 import { UserProfile } from '@/components/UserProfile';
 import Link from 'next/link';
-import { Loader, Lock, FileText, Users, Zap, Shield, CheckCircle } from 'lucide-react';
+import { Loader, Lock, FileText, Users, Zap, Shield, CheckCircle, Database } from 'lucide-react';
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -100,7 +100,7 @@ export default function Home() {
             </div>
 
             {/* Action Cards */}
-            <div className="grid sm:grid-cols-2 gap-5">
+            <div className="grid sm:grid-cols-3 gap-5">
               <Link href="/apresentacao" className="group card overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-[inherit]" />
                 <div className="relative space-y-3">
@@ -122,9 +122,23 @@ export default function Home() {
                     <FileText className="w-5 h-5 text-violet-400" />
                   </div>
                   <h3 className="text-lg font-semibold text-white">Cadastro de Usuário</h3>
-                  <p className="text-slate-500 text-sm">Preencha o formulário e gere seu arquivo JSON automaticamente</p>
+                  <p className="text-slate-500 text-sm">Cadastre múltiplos usuários e gere arquivos JSON</p>
                   <div className="inline-flex items-center gap-1.5 text-violet-400 text-sm font-medium group-hover:gap-2.5 transition-all duration-200">
                     Acessar <span>→</span>
+                  </div>
+                </div>
+              </Link>
+
+              <Link href="/usuarios" className="group card overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-[inherit]" />
+                <div className="relative space-y-3">
+                  <div className="p-2.5 w-fit rounded-lg bg-cyan-500/10">
+                    <Database className="w-5 h-5 text-cyan-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">Usuários Cadastrados</h3>
+                  <p className="text-slate-500 text-sm">Gerencie e visualize todos os usuários registrados</p>
+                  <div className="inline-flex items-center gap-1.5 text-cyan-400 text-sm font-medium group-hover:gap-2.5 transition-all duration-200">
+                    Gerenciar <span>→</span>
                   </div>
                 </div>
               </Link>
