@@ -1,6 +1,6 @@
 'use client';
 
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider, Auth } from 'firebase/auth';
 import { auth } from '@/services/firebase';
 import { useState } from 'react';
 import { Loader } from 'lucide-react';
@@ -10,6 +10,11 @@ export function LoginButton() {
   const [error, setError] = useState('');
 
   const handleGoogleLogin = async () => {
+    if (!auth) {
+      setError('Firebase não está configurado');
+      return;
+    }
+
     setLoading(true);
     setError('');
     try {

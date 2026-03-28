@@ -1,12 +1,33 @@
 // src/services/firebase.ts
 'use client';
 
-import { initializeApp, getApp, getApps } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getAnalytics } from 'firebase/analytics';
+import { 
+  initializeApp, 
+  getApp, 
+  getApps, 
+  FirebaseApp 
+} from 'firebase/app';
+import { 
+  getAuth, 
+  Auth 
+} from 'firebase/auth';
+import { 
+  getAnalytics, 
+  Analytics 
+} from 'firebase/analytics';
 
 // Firebase configuration with environment variables
-const firebaseConfig = {
+interface FirebaseConfig {
+  apiKey: string | undefined;
+  authDomain: string | undefined;
+  projectId: string | undefined;
+  storageBucket: string | undefined;
+  messagingSenderId: string | undefined;
+  appId: string | undefined;
+  measurementId?: string | undefined;
+}
+
+const firebaseConfig: FirebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -29,9 +50,9 @@ if (!isValidConfig && typeof window !== 'undefined') {
 }
 
 // Initialize Firebase only once and only on client side
-let app;
-let auth;
-let analytics;
+let app: FirebaseApp | undefined;
+let auth: Auth | undefined;
+let analytics: Analytics | undefined;
 
 if (typeof window !== 'undefined' && isValidConfig) {
   try {
@@ -53,4 +74,5 @@ if (typeof window !== 'undefined' && isValidConfig) {
 }
 
 export { app, auth, analytics };
+export type { FirebaseApp, Auth, Analytics };
 export default app;

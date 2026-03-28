@@ -45,6 +45,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUserData) => {
       if (firebaseUserData) {
         const userData: UserData = {
@@ -78,6 +83,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = async () => {
+    if (!auth) {
+      console.error('Firebase não está configurado');
+      return;
+    }
+
     try {
       await signOut(auth);
       setUser(null);
@@ -96,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const addAccount = useCallback(async () => {
-    if (accounts.length >= 2) return;
+    if (!auth || accounts.length >= 2) return;
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
@@ -108,6 +118,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [accounts.length]);
 
   const switchAccount = useCallback(async (uid: string) => {
+    if (!auth) {
+      console.error('Firebase não está configurado');
+      return;
+    }
+
     const account = accounts.find(a => a.uid === uid);
     if (!account) return;
 
