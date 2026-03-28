@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: 'Auth Pro - Autenticação Google Segura',
   description: 'Aplicação web moderna com autenticação via Google e cadastro de usuários. Design SaaS profissional.',
   keywords: 'autenticação, google, react, next.js, firebase, oauth2, segurança',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
