@@ -51,8 +51,8 @@ if (!isValidConfig && typeof window !== 'undefined') {
 
 // Initialize Firebase only once and only on client side
 let app: FirebaseApp | undefined;
-let auth: Auth | undefined;
-let analytics: Analytics | undefined;
+let auth: Auth | undefined = undefined;
+let analytics: Analytics | undefined = undefined;
 
 if (typeof window !== 'undefined' && isValidConfig) {
   try {
@@ -73,6 +73,8 @@ if (typeof window !== 'undefined' && isValidConfig) {
   }
 }
 
-export { app, auth, analytics };
+export { app };
+export { auth };
+export { analytics };
 export type { FirebaseApp, Auth, Analytics };
 export default app;
